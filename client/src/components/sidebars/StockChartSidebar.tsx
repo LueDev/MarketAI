@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useAppContext } from "../../context/AppContext";
 import { fetchAnalysisPrediction } from "../../services/apiService";
@@ -45,8 +45,13 @@ const subplotMapping: Record<string, string[]> = {
 };
 
 const StockChartSidebar: React.FC = () => {
-  const { enabledIndicators, setEnabledIndicators, visibleSubplots, setVisibleSubplots } =
-    useAppContext();
+    const {
+        enabledIndicators,
+        setEnabledIndicators,
+        visibleSubplots,
+        setVisibleSubplots,
+        setPredictions,
+      } = useAppContext();
 
   const location = useLocation();
 
@@ -55,27 +60,44 @@ const StockChartSidebar: React.FC = () => {
 
   console.log("Extracted symbol (location.pathname):", symbol);
 
-  const [noiseLevel, setNoiseLevel] = useState(0.016);
+  const [noiseLevel, setNoiseLevel] = useState(0.000000000016180339887);
   const [timeframe, setTimeframe] = useState(90);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleGeneratePredictions = async () => {
-    if (!symbol) {
-      alert("Stock symbol is missing!");
-      return;
+        if (!symbol) {
+            alert("Stock symbol is missing!");
+            return;
+        }
+
+        try {
+            setIsLoading(true);
+            
+            // Fetch predictions
+            const predictionResponse = await fetchAnalysisPrediction(symbol, timeframe, noiseLevel);
+
+            // Calculate the dates for the predictions
+            const lastChartDate = new Date(); // Assume today's date as the last chart date
+            const predictionDates = Array.from({ length: timeframe }, (_, i) =>
+                new Date(lastChartDate.getTime() + (i + 1) * 24 * 60 * 60 * 1000)
+                    .toISOString()
+                    .split("T")[0]
+            );
+
+            // Update predictions in the context
+            setPredictions({
+                symbol,
+                data: predictionResponse.recent_predictions, // Use recent_predictions as the data
+                dates: predictionDates, // Auto-generate the dates
+            });
+        } catch (error) {
+            console.error("Error generating predictions:", error);
+            alert("Failed to generate predictions. Please try again.");
+        } finally {
+            setIsLoading(false);
+        }
     }
 
-    try {
-      setIsLoading(true);
-      const predictions = await fetchAnalysisPrediction(symbol, timeframe, noiseLevel);
-      console.log("Predictions:", predictions); // Replace with logic to handle/display predictions
-    } catch (error) {
-      console.error("Error generating predictions:", error);
-      alert("Failed to generate predictions. Please try again.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const handleToggleIndicator = (indicator: string) => {
     setEnabledIndicators((prevState) => ({

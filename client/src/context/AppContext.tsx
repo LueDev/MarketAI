@@ -1,10 +1,18 @@
 import React, { createContext, useState, useContext } from "react";
 
+interface Prediction {
+  symbol: string;
+  data: number[];
+  dates: string[];
+}
+
 interface AppContextProps {
   enabledIndicators: Record<string, boolean>;
   setEnabledIndicators: React.Dispatch<React.SetStateAction<Record<string, boolean>>>;
   visibleSubplots: string;
   setVisibleSubplots: React.Dispatch<React.SetStateAction<string>>;
+  predictions: Prediction | null;
+  setPredictions: React.Dispatch<React.SetStateAction<Prediction | null>>;
 }
 
 const AppContext = createContext<AppContextProps | undefined>(undefined);
@@ -34,6 +42,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const [visibleSubplots, setVisibleSubplots] = useState<string>("Show All");
 
+  // New: State for predictions
+  const [predictions, setPredictions] = useState<Prediction | null>(null);
+
   return (
     <AppContext.Provider
       value={{
@@ -41,6 +52,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         setEnabledIndicators,
         visibleSubplots,
         setVisibleSubplots,
+        predictions,
+        setPredictions,
       }}
     >
       {children}

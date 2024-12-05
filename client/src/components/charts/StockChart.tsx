@@ -9,36 +9,52 @@ interface StockChartProps {
 }
 
 const StockChart: React.FC<StockChartProps> = ({ symbol, data }) => {
-    
-    const { enabledIndicators, visibleSubplots } = useAppContext();
-    
-    const formattedDates = data.map((entry) =>
-      new Date(entry.Date).toISOString().split("T")[0]
-    );
-    
-    const [chartDimensions, setChartDimensions] = useState({
-      width: window.innerWidth * 0.7,
-      height: window.innerHeight * 0.7,
-    });
-  
-    // Adjust chart size dynamically on window resize
-    useEffect(() => {
-      const handleResize = () => {
-        setChartDimensions({
-          width: window.innerWidth * 0.9, // 3/5 of the screen width
-          height: window.innerHeight * 0.9, // Half of the screen height
-        });
-      };
-  
-      window.addEventListener("resize", handleResize);
-      return () => window.removeEventListener("resize", handleResize);
-    }, []);
+  const { enabledIndicators, visibleSubplots, predictions } = useAppContext();
+
+  const formattedDates = data.map((entry) =>
+    new Date(entry.Date).toISOString().split("T")[0]
+  );
+
+  const [chartDimensions, setChartDimensions] = useState({
+    width: window.innerWidth * 0.7,
+    height: window.innerHeight * 0.7,
+  });
+
+  // Adjust chart size dynamically on window resize
+  useEffect(() => {
+    const handleResize = () => {
+      setChartDimensions({
+        width: window.innerWidth * 0.8,
+        height: window.innerHeight * 0.7,
+      });
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   // Determine visibility for each subplot
   const getVisibility = (indicator: string, subplot: string) => {
     if (visibleSubplots === "Show All") return enabledIndicators[indicator];
     return visibleSubplots === subplot && enabledIndicators[indicator];
   };
+
+    // Safely add the prediction trace if predictions exist and match the current symbol
+    const predictionTrace =
+    predictions && predictions.symbol === symbol
+    ? {
+        x: predictions.dates,
+        y: predictions.data,
+        type: "scatter",
+        mode: "lines",
+        name: "Prediction",
+        line: { color: "red", width: 4 },
+        xaxis: "x",
+        yaxis: "y",
+        visible: true, // Always show predictions
+        }
+    : null;
+
 
   return (
     <div>
@@ -67,6 +83,29 @@ const StockChart: React.FC<StockChartProps> = ({ symbol, data }) => {
             xaxis: "x",
             yaxis: "y",
             visible: getVisibility("vwap", "Price Indicators"),
+          },
+          predictionTrace, // Add prediction trace conditionally
+          {
+            x: formattedDates,
+            y: data.map((entry) => entry.MA_10 ?? null),
+            type: "scatter",
+            mode: "lines",
+            name: "10-Day MA",
+            line: { color: "light green" },
+            xaxis: "x",
+            yaxis: "y",
+            visible: getVisibility("ma10", "Price Indicators"),
+          },
+          {
+            x: formattedDates,
+            y: data.map((entry) => entry.MA_50 ?? null),
+            type: "scatter",
+            mode: "lines",
+            name: "50-Day MA",
+            line: { color: "dark green" },
+            xaxis: "x",
+            yaxis: "y",
+            visible: getVisibility("ma50", "Price Indicators"),
           },
           {
             x: formattedDates,
@@ -172,7 +211,6 @@ const StockChart: React.FC<StockChartProps> = ({ symbol, data }) => {
                 line: { color: "green", dash: "solid" },
                 visible: getVisibility("bollingerLower", "Price Indicators"),
           },
-        
           // Momentum Indicators
           {
             x: formattedDates,
@@ -219,17 +257,6 @@ const StockChart: React.FC<StockChartProps> = ({ symbol, data }) => {
             yaxis: "y3",
             visible: getVisibility("stochastic", "Oscillators"),
           },
-          {
-            x: formattedDates,
-            y: data.map((entry) => entry["Williams %R"] ?? null),
-            type: "scatter",
-            mode: "lines",
-            name: "Williams_%R",
-            line: { color: "gold" },
-            xaxis: "x",
-            yaxis: "y3",
-            visible: getVisibility("Williams_R", "Oscillators"),
-          },
           // Volume/Volatility
           {
             x: formattedDates,
@@ -240,18 +267,7 @@ const StockChart: React.FC<StockChartProps> = ({ symbol, data }) => {
             yaxis: "y4",
             visible: getVisibility("Volume", "Volume/Volatility"),
           },
-          {
-            x: formattedDates,
-            y: data.map((entry) => entry.Volatility ?? null),
-            type: "scatter",
-            mode: "lines",
-            name: "Volatility",
-            line: { color: "gold", dash: "dot" },
-            xaxis: "x",
-            yaxis: "y4",
-            visible: getVisibility("Volatility", "Volume/Volatility"),
-          },
-        ]}
+        ].filter(Boolean)} // Filter out null traces
         layout={{
           grid: {
             rows: 4,
@@ -282,3 +298,7 @@ const StockChart: React.FC<StockChartProps> = ({ symbol, data }) => {
 };
 
 export default StockChart;
+
+
+
+
