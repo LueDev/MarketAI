@@ -1,0 +1,38 @@
+(MarketAI) luisjorge@Luis-MBP RF_multi_output % python evaluate_models.py
+Evaluating model: rf_finance_historical on dataset: final_enhanced_top25_finance_recent.csv...
+Loaded model from /Users/luisjorge/code/Flatiron-Phase-5/MarketAI/server/ml_components/RF_multi_output/models/rf_finance_historical.joblib.
+Loaded test data from /Users/luisjorge/code/Flatiron-Phase-5/MarketAI/server/ml_components/RF_multi_output/../data/final_enhanced_top25_finance_recent.csv. Dataset size: (12525, 27)
+Results for rf_finance_historical on final_enhanced_top25_finance_recent.csv:
+MSE: 0.012348, R²: 1.000000, MAE: 0.012376
+--------------------------------------------------
+Evaluating model: rf_finance_recent on dataset: final_enhanced_top25_finance_historical.csv...
+Loaded model from /Users/luisjorge/code/Flatiron-Phase-5/MarketAI/server/ml_components/RF_multi_output/models/rf_finance_recent.joblib.
+Loaded test data from /Users/luisjorge/code/Flatiron-Phase-5/MarketAI/server/ml_components/RF_multi_output/../data/final_enhanced_top25_finance_historical.csv. Dataset size: (153151, 27)
+Results for rf_finance_recent on final_enhanced_top25_finance_historical.csv:
+MSE: 2.078010, R²: 0.999806, MAE: 0.553807
+--------------------------------------------------
+Evaluating model: rf_health_historical on dataset: final_enhanced_top25_health_recent.csv...
+Loaded model from /Users/luisjorge/code/Flatiron-Phase-5/MarketAI/server/ml_components/RF_multi_output/models/rf_health_historical.joblib.
+Loaded test data from /Users/luisjorge/code/Flatiron-Phase-5/MarketAI/server/ml_components/RF_multi_output/../data/final_enhanced_top25_health_recent.csv. Dataset size: (12525, 27)
+Results for rf_health_historical on final_enhanced_top25_health_recent.csv:
+MSE: 0.073369, R²: 0.999998, MAE: 0.029842
+--------------------------------------------------
+Evaluating model: rf_health_recent on dataset: final_enhanced_top25_health_historical.csv...
+Loaded model from /Users/luisjorge/code/Flatiron-Phase-5/MarketAI/server/ml_components/RF_multi_output/models/rf_health_recent.joblib.
+Loaded test data from /Users/luisjorge/code/Flatiron-Phase-5/MarketAI/server/ml_components/RF_multi_output/../data/final_enhanced_top25_health_historical.csv. Dataset size: (146316, 27)
+Results for rf_health_recent on final_enhanced_top25_health_historical.csv:
+MSE: 31.993069, R²: 0.997679, MAE: 2.151137
+--------------------------------------------------
+Evaluating model: rf_tech_historical on dataset: final_enhanced_top25_tech_recent.csv...
+Loaded model from /Users/luisjorge/code/Flatiron-Phase-5/MarketAI/server/ml_components/RF_multi_output/models/rf_tech_historical.joblib.
+Loaded test data from /Users/luisjorge/code/Flatiron-Phase-5/MarketAI/server/ml_components/RF_multi_output/../data/final_enhanced_top25_tech_recent.csv. Dataset size: (12525, 27)
+Results for rf_tech_historical on final_enhanced_top25_tech_recent.csv:
+MSE: 0.171812, R²: 0.999994, MAE: 0.048584
+--------------------------------------------------
+Evaluating model: rf_tech_recent on dataset: final_enhanced_top25_tech_historical.csv...
+Loaded model from /Users/luisjorge/code/Flatiron-Phase-5/MarketAI/server/ml_components/RF_multi_output/models/rf_tech_recent.joblib.
+Loaded test data from /Users/luisjorge/code/Flatiron-Phase-5/MarketAI/server/ml_components/RF_multi_output/../data/final_enhanced_top25_tech_historical.csv. Dataset size: (124755, 27)
+Results for rf_tech_recent on final_enhanced_top25_tech_historical.csv:
+MSE: 20.187997, R²: 0.998225, MAE: 1.769283
+--------------------------------------------------
+(MarketAI) luisjorge@Luis-MBP RF_multi_output % 

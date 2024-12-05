@@ -1,0 +1,20 @@
+(MarketAI) luisjorge@Luis-MBP RF_multi_output % python train_rf_multi_output.py
+Loading dataset from /Users/luisjorge/code/Flatiron-Phase-5/MarketAI/server/ml_components/RF_multi_output/../data/final_enhanced_top25_finance_historical.csv...
+Dataset size: (153151, 27)
+Model: rf_finance_historical | MSE: 0.0007938931199518254
+Loading dataset from /Users/luisjorge/code/Flatiron-Phase-5/MarketAI/server/ml_components/RF_multi_output/../data/final_enhanced_top25_finance_recent.csv...
+Dataset size: (12525, 27)
+Model: rf_finance_recent | MSE: 0.054811409436978646
+Loading dataset from /Users/luisjorge/code/Flatiron-Phase-5/MarketAI/server/ml_components/RF_multi_output/../data/final_enhanced_top25_health_historical.csv...
+Dataset size: (146316, 27)
+Model: rf_health_historical | MSE: 0.002291575097562113
+Loading dataset from /Users/luisjorge/code/Flatiron-Phase-5/MarketAI/server/ml_components/RF_multi_output/../data/final_enhanced_top25_health_recent.csv...
+Dataset size: (12525, 27)
+Model: rf_health_recent | MSE: 0.03418747739410749
+Loading dataset from /Users/luisjorge/code/Flatiron-Phase-5/MarketAI/server/ml_components/RF_multi_output/../data/final_enhanced_top25_tech_historical.csv...
+Dataset size: (124755, 27)
+Model: rf_tech_historical | MSE: 0.002605602266055988
+Loading dataset from /Users/luisjorge/code/Flatiron-Phase-5/MarketAI/server/ml_components/RF_multi_output/../data/final_enhanced_top25_tech_recent.csv...
+Dataset size: (12525, 27)
+Model: rf_tech_recent | MSE: 0.022166470864058607
+(MarketAI) luisjorge@Luis-MBP RF_multi_output % 

@@ -1,0 +1,825 @@
+swagger: "2.0"
+info:
+  description: "API for managing users, stocks, sectors, and analyses in MarketAI"
+  version: "1.0.0"
+  title: "MarketAI API"
+  contact:
+    name: "Luis Jorge"
+    email: "luisjorge@example.com"
+host: "127.0.0.1:10000"
+basePath: "/"
+schemes:
+  - "http"
+  - "https"
+paths:
+  /users:
+    get:
+      summary: "Retrieve all users"
+      description: "Fetch a list of all users in the database."
+      tags:
+        - "User"
+      responses:
+        200:
+          description: "A list of users."
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/User"
+    post:
+      summary: "Create a new user"
+      description: "Register a new user with a unique username and email."
+      tags:
+        - "User"
+      parameters:
+        - in: body
+          name: user
+          schema:
+            $ref: "#/definitions/UserInput"
+      responses:
+        201:
+          description: "User created successfully."
+          schema:
+            $ref: "#/definitions/User"
+        400:
+          description: "Validation error or unique constraint violation."
+
+  /users/{user_id}:
+    get:
+      summary: "Get a user by ID"
+      description: "Retrieve a user by their unique ID."
+      tags:
+        - "User"
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          type: integer
+      responses:
+        200:
+          description: "User retrieved successfully."
+          schema:
+            $ref: "#/definitions/User"
+        404:
+          description: "User not found."
+    put:
+      summary: "Update a user's information"
+      description: "Update the username and email of an existing user."
+      tags:
+        - "User"
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          type: integer
+        - in: body
+          name: user
+          schema:
+            $ref: "#/definitions/UserInput"
+      responses:
+        200:
+          description: "User updated successfully."
+          schema:
+            $ref: "#/definitions/User"
+        400:
+          description: "Validation error or unique constraint violation."
+        404:
+          description: "User not found."
+    delete:
+      summary: "Delete a user"
+      description: "Delete a user by their unique ID."
+      tags:
+        - "User"
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          type: integer
+      responses:
+        200:
+          description: "User deleted successfully."
+        404:
+          description: "User not found."
+
+  /users/email/{email}:
+    get:
+      summary: "Get a user by email"
+      description: "Retrieve a user by their unique email."
+      tags:
+        - "User"
+      parameters:
+        - name: email
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: "User retrieved successfully."
+          schema:
+            $ref: "#/definitions/User"
+        404:
+          description: "User not found."
+
+  /users/username/{username}:
+    get:
+      summary: "Get a user by username"
+      description: "Retrieve a user by their unique username."
+      tags:
+        - "User"
+      parameters:
+        - name: username
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: "User retrieved successfully."
+          schema:
+            $ref: "#/definitions/User"
+        404:
+          description: "User not found."
+
+  /stocks:
+    get:
+      summary: "Retrieve all stocks"
+      description: "Fetch a list of all stocks in the database."
+      tags:
+        - "Stock"
+      responses:
+        200:
+          description: "A list of stocks."
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Stock"
+
+    post:
+      summary: "Create a new stock"
+      description: "Add a new stock with a unique name and symbol."
+      tags:
+        - "Stock"
+      parameters:
+        - in: body
+          name: stock
+          schema:
+            $ref: "#/definitions/StockInput"
+      responses:
+        201:
+          description: "Stock created successfully."
+          schema:
+            $ref: "#/definitions/Stock"
+        400:
+          description: "Validation error or unique constraint violation."
+
+  /stocks/{stock_id}:
+    get:
+      summary: "Get a stock by ID"
+      description: "Retrieve a stock by its unique ID."
+      tags:
+        - "Stock"
+      parameters:
+        - name: stock_id
+          in: path
+          required: true
+          type: integer
+      responses:
+        200:
+          description: "Stock retrieved successfully."
+          schema:
+            $ref: "#/definitions/Stock"
+        404:
+          description: "Stock not found."
+    put:
+      summary: "Update a stock's information"
+      description: "Update the name and symbol of an existing stock."
+      tags:
+        - "Stock"
+      parameters:
+        - name: stock_id
+          in: path
+          required: true
+          type: integer
+        - in: body
+          name: stock
+          schema:
+            $ref: "#/definitions/StockInput"
+      responses:
+        200:
+          description: "Stock updated successfully."
+          schema:
+            $ref: "#/definitions/Stock"
+        400:
+          description: "Validation error or unique constraint violation."
+        404:
+          description: "Stock not found."
+    delete:
+      summary: "Delete a stock"
+      description: "Delete a stock by its unique ID."
+      tags:
+        - "Stock"
+      parameters:
+        - name: stock_id
+          in: path
+          required: true
+          type: integer
+      responses:
+        200:
+          description: "Stock deleted successfully."
+        404:
+          description: "Stock not found."
+
+  /stocks/symbol/{symbol}:
+    get:
+      summary: "Get a stock by symbol"
+      description: "Retrieve a stock by its unique symbol."
+      tags:
+        - "Stock"
+      parameters:
+        - name: symbol
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: "Stock retrieved successfully."
+          schema:
+            $ref: "#/definitions/Stock"
+        404:
+          description: "Stock not found."
+
+  /stocks/fetch/{symbol}:
+    get:
+      summary: "Fetch and cache stock data"
+      description: "Retrieve raw and transformed stock data with derived features."
+      tags:
+        - "Stock"
+      parameters:
+        - name: symbol
+          in: path
+          required: true
+          type: string
+          description: "Stock ticker symbol (e.g., AAPL, GOOGL)."
+        - name: period
+          in: query
+          required: false
+          type: string
+          description: "Time period for fetching data (e.g., 1mo, 6mo, 1y)."
+          example: "1mo"
+        - name: interval
+          in: query
+          required: false
+          type: string
+          description: "Data interval (e.g., 1d, 1wk, 1mo)."
+          example: "1d"
+      responses:
+        200:
+          description: "Stock data retrieved successfully."
+          schema:
+            type: object
+            properties:
+              raw_data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    Date:
+                      type: string
+                      format: date
+                    Open:
+                      type: number
+                    High:
+                      type: number
+                    Low:
+                      type: number
+                    Close:
+                      type: number
+                    Volume:
+                      type: integer
+              transformed_data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    VWAP:
+                      type: number
+                    MA_10:
+                      type: number
+                    MA_50:
+                      type: number
+        400:
+          description: "Invalid parameters provided."
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Invalid period or interval."
+        404:
+          description: "Data not available."
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "No data available for stock: AAPL."
+
+
+
+
+  /stocks/sector/{sector_id}:
+    get:
+      summary: "Get stocks by sector ID"
+      description: "Retrieve all stocks associated with a specific sector."
+      tags:
+        - "Stock"
+      parameters:
+        - name: sector_id
+          in: path
+          required: true
+          type: integer
+      responses:
+        200:
+          description: "A list of stocks within the sector."
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Stock"
+        404:
+          description: "No stocks found in the specified sector."
+
+  /sectors:
+    get:
+      summary: "Retrieve all sectors"
+      description: "Fetch a list of all sectors."
+      tags:
+        - "Sector"
+      responses:
+        200:
+          description: "A list of sectors."
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Sector"
+
+    post:
+      summary: "Create a new sector"
+      description: "Add a new sector with a unique name."
+      tags:
+        - "Sector"
+      parameters:
+        - in: body
+          name: sector
+          schema:
+            $ref: "#/definitions/SectorInput"
+      responses:
+        201:
+          description: "Sector created successfully."
+          schema:
+            $ref: "#/definitions/Sector"
+        400:
+          description: "Sector name must be unique."
+
+  /sectors/{sector_id}:
+    get:
+      summary: "Get a sector by ID"
+      description: "Retrieve a sector by its unique ID."
+      tags:
+        - "Sector"
+      parameters:
+        - name: sector_id
+          in: path
+          required: true
+          type: integer
+      responses:
+        200:
+          description: "Sector retrieved successfully."
+          schema:
+            $ref: "#/definitions/Sector"
+        404:
+          description: "Sector not found."
+    put:
+      summary: "Update a sector's information"
+      description: "Update the name of an existing sector."
+      tags:
+        - "Sector"
+      parameters:
+        - name: sector_id
+          in: path
+          required: true
+          type: integer
+        - in: body
+          name: sector
+          schema:
+            $ref: "#/definitions/SectorInput"
+      responses:
+        200:
+          description: "Sector updated successfully."
+          schema:
+            $ref: "#/definitions/Sector"
+        400:
+          description: "Sector name must be unique."
+        404:
+          description: "Sector not found."
+    delete:
+      summary: "Delete a sector"
+      description: "Delete a sector by its unique ID."
+      tags:
+        - "Sector"
+      parameters:
+        - name: sector_id
+          in: path
+          required: true
+          type: integer
+      responses:
+        200:
+          description: "Sector deleted successfully."
+        404:
+          description: "Sector not found."
+  /sectors/stocks/min_count/{min_count}:
+    get:
+      summary: "Retrieve sectors by minimum stock count"
+      description: "Retrieve a list of sectors with at least the specified number of stocks."
+      tags:
+        - "Sector"
+      parameters:
+        - name: min_count
+          in: path
+          required: true
+          type: integer
+          description: "Minimum number of stocks for a sector to be included."
+      responses:
+        200:
+          description: "List of sectors with at least the specified number of stocks."
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Sector"
+        404:
+          description: "No sectors with the specified stock count found."
+
+  /sectors/{sector_name}/stocks:
+    get:
+      summary: "Retrieve stocks by sector name"
+      description: "Retrieve a list of stocks associated with a specific sector by name."
+      tags:
+        - "Sector"
+      parameters:
+        - name: sector_name
+          in: path
+          required: true
+          type: string
+          description: "The name of the sector to retrieve stocks from."
+      responses:
+        200:
+          description: "List of stocks in the specified sector."
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Stock"
+        404:
+          description: "Sector not found."
+
+  /sectors/name/{name}:
+    get:
+      summary: "Get sector by name"
+      description: "Retrieve a sector by its unique name."
+      tags:
+        - "Sector"
+      parameters:
+        - name: name
+          in: path
+          required: true
+          type: string
+          description: "The unique name of the sector."
+      responses:
+        200:
+          description: "Sector retrieved successfully."
+          schema:
+            $ref: "#/definitions/Sector"
+        404:
+          description: "Sector not found."
+
+  /analysis:
+    get:
+      summary: "Retrieve all analyses"
+      description: "Fetch a list of all analyses."
+      tags:
+        - "Analysis"
+      responses:
+        200:
+          description: "A list of analyses."
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Analysis"
+
+    post:
+      summary: "Create a new analysis"
+      description: "Add a new analysis with a description."
+      tags:
+        - "Analysis"
+      parameters:
+        - in: body
+          name: analysis
+          schema:
+            $ref: "#/definitions/AnalysisInput"
+      responses:
+        201:
+          description: "Analysis created successfully."
+          schema:
+            $ref: "#/definitions/Analysis"
+        400:
+          description: "Validation error."
+
+  /analysis/{analysis_id}:
+    get:
+      summary: "Get an analysis by ID"
+      description: "Retrieve an analysis by its unique ID."
+      tags:
+        - "Analysis"
+      parameters:
+        - name: analysis_id
+          in: path
+          required: true
+          type: integer
+      responses:
+        200:
+          description: "Analysis retrieved successfully."
+          schema:
+            $ref: "#/definitions/Analysis"
+        404:
+          description: "Analysis not found."
+    put:
+      summary: "Update an analysis's description"
+      description: "Update the description of an existing analysis."
+      tags:
+        - "Analysis"
+      parameters:
+        - name: analysis_id
+          in: path
+          required: true
+          type: integer
+        - in: body
+          name: analysis
+          schema:
+            $ref: "#/definitions/AnalysisInput"
+      responses:
+        200:
+          description: "Analysis updated successfully."
+          schema:
+            $ref: "#/definitions/Analysis"
+        400:
+          description: "Validation error."
+        404:
+          description: "Analysis not found."
+    delete:
+      summary: "Delete an analysis"
+      description: "Delete an analysis by its unique ID."
+      tags:
+        - "Analysis"
+      parameters:
+        - name: analysis_id
+          in: path
+          required: true
+          type: integer
+      responses:
+        200:
+          description: "Analysis deleted successfully."
+        404:
+          description: "Analysis not found."
+
+      /analysis/predict:
+    post:
+      summary: "Predict stock prices"
+      description: "Make predictions for a stock using historical and recent data models."
+      tags:
+        - "Analysis"
+      parameters:
+        - in: body
+          name: prediction_request
+          required: true
+          description: "JSON object containing stock name and optional batch size."
+          schema:
+            type: object
+            properties:
+              stock_name:
+                type: string
+                description: "Stock ticker symbol (e.g., AAPL, GOOGL)."
+                example: "AAPL"
+              batch_size:
+                type: integer
+                description: "Batch size for prediction processing (optional)."
+                example: 2500
+      responses:
+        200:
+          description: "Prediction results for historical and recent models."
+          schema:
+            type: object
+            properties:
+              stock_name:
+                type: string
+                example: "AAPL"
+              sector:
+                type: string
+                example: "tech"
+              timestamp:
+                type: string
+                format: date-time
+              predictions:
+                type: object
+                properties:
+                  historical:
+                    type: object
+                    properties:
+                      values:
+                        type: object
+                        properties:
+                          Close:
+                            type: array
+                            items:
+                              type: number
+                          High:
+                            type: array
+                            items:
+                              type: number
+                          Low:
+                            type: array
+                            items:
+                              type: number
+                          Volume:
+                            type: array
+                            items:
+                              type: number
+                      metrics:
+                        type: object
+                        properties:
+                          MAE:
+                            type: number
+                          MSE:
+                            type: number
+                          R²:
+                            type: number
+                  recent:
+                    type: object
+                    properties:
+                      values:
+                        type: object
+                        properties:
+                          Close:
+                            type: array
+                            items:
+                              type: number
+                          High:
+                            type: array
+                            items:
+                              type: number
+                          Low:
+                            type: array
+                            items:
+                              type: number
+                          Volume:
+                            type: array
+                            items:
+                              type: number
+                      metrics:
+                        type: object
+                        properties:
+                          MAE:
+                            type: number
+                          MSE:
+                            type: number
+                          R²:
+                            type: number
+        400:
+          description: "Bad request due to missing or invalid parameters."
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Stock name is required."
+        404:
+          description: "Transformed data not found in the cache."
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Transformed data for AAPL not found in cache."
+
+
+  /analysis/keyword/{keyword}:
+    get:
+      summary: "Retrieve analyses by keyword"
+      description: "Retrieve a list of analyses that contain a specific keyword in their descriptions."
+      tags:
+        - "Analysis"
+      parameters:
+        - name: keyword
+          in: path
+          required: true
+          type: string
+          description: "Keyword to search within analysis descriptions."
+      responses:
+        200:
+          description: "List of analyses matching the keyword."
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Analysis"
+        404:
+          description: "No analyses found with the specified keyword."
+
+definitions:
+  User:
+    type: object
+    properties:
+      id:
+        type: integer
+      username:
+        type: string
+      email:
+        type: string
+
+  UserInput:
+    type: object
+    required:
+      - username
+      - email
+    properties:
+      username:
+        type: string
+      email:
+        type: string
+
+  Stock:
+    type: object
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      symbol:
+        type: string
+
+  StockInput:
+    type: object
+    required:
+      - name
+      - symbol
+    properties:
+      name:
+        type: string
+      symbol:
+        type: string
+
+  Sector:
+    type: object
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      description:
+        type: string
+
+  SectorInput:
+    type: object
+    required:
+      - name
+    properties:
+      name:
+        type: string
+      description:
+        type: string
+
+  Analysis:
+    type: object
+    properties:
+      id:
+        type: integer
+      stock_id:
+        type: integer
+      attribute:
+        type: string
+      value:
+        type: number
+      timestamp:
+        type: string
+        format: date-time
+
+  AnalysisInput:
+    type: object
+    required:
+      - stock_id
+      - attribute
+      - value
+    properties:
+      stock_id:
+        type: integer
+        description: "The ID of the associated stock."
+      attribute:
+        type: string
+        description: "The name of the attribute for this analysis entry."
+      value:
+        type: number
+        description: "The value associated with the attribute."

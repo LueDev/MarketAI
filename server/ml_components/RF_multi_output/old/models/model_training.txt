@@ -1,0 +1,43 @@
+(MarketAI) luisjorge@Luis-MBP RF_multi_output % python train_rf_multi_output.py
+Loading dataset from /Users/luisjorge/code/Flatiron-Phase-5/MarketAI/server/ml_components/RF_multi_output/../data/final_enhanced_top25_finance_historical.csv...
+Dataset size: (153151, 27)
+Input features: (153151, 25), Target size: (153151,)
+Training model: rf_finance_historical...
+Model training complete.
+Model: rf_finance_historical | MSE: 0.0008986906536813622
+Model saved at /Users/luisjorge/code/Flatiron-Phase-5/MarketAI/server/ml_components/RF_multi_output/models/rf_finance_historical.joblib
+Loading dataset from /Users/luisjorge/code/Flatiron-Phase-5/MarketAI/server/ml_components/RF_multi_output/../data/final_enhanced_top25_finance_recent.csv...
+Dataset size: (12525, 27)
+Input features: (12525, 25), Target size: (12525,)
+Training model: rf_finance_recent...
+Model training complete.
+Model: rf_finance_recent | MSE: 0.024707117916201154
+Model saved at /Users/luisjorge/code/Flatiron-Phase-5/MarketAI/server/ml_components/RF_multi_output/models/rf_finance_recent.joblib
+Loading dataset from /Users/luisjorge/code/Flatiron-Phase-5/MarketAI/server/ml_components/RF_multi_output/../data/final_enhanced_top25_health_historical.csv...
+Dataset size: (146316, 27)
+Input features: (146316, 25), Target size: (146316,)
+Training model: rf_health_historical...
+Model training complete.
+Model: rf_health_historical | MSE: 0.0020317573546859142
+Model saved at /Users/luisjorge/code/Flatiron-Phase-5/MarketAI/server/ml_components/RF_multi_output/models/rf_health_historical.joblib
+Loading dataset from /Users/luisjorge/code/Flatiron-Phase-5/MarketAI/server/ml_components/RF_multi_output/../data/final_enhanced_top25_health_recent.csv...
+Dataset size: (12525, 27)
+Input features: (12525, 25), Target size: (12525,)
+Training model: rf_health_recent...
+Model training complete.
+Model: rf_health_recent | MSE: 0.0368818471203441
+Model saved at /Users/luisjorge/code/Flatiron-Phase-5/MarketAI/server/ml_components/RF_multi_output/models/rf_health_recent.joblib
+Loading dataset from /Users/luisjorge/code/Flatiron-Phase-5/MarketAI/server/ml_components/RF_multi_output/../data/final_enhanced_top25_tech_historical.csv...
+Dataset size: (124755, 27)
+Input features: (124755, 25), Target size: (124755,)
+Training model: rf_tech_historical...
+Model training complete.
+Model: rf_tech_historical | MSE: 0.002782766773759099
+Model saved at /Users/luisjorge/code/Flatiron-Phase-5/MarketAI/server/ml_components/RF_multi_output/models/rf_tech_historical.joblib
+Loading dataset from /Users/luisjorge/code/Flatiron-Phase-5/MarketAI/server/ml_components/RF_multi_output/../data/final_enhanced_top25_tech_recent.csv...
+Dataset size: (12525, 27)
+Input features: (12525, 25), Target size: (12525,)
+Training model: rf_tech_recent...
+Model training complete.
+Model: rf_tech_recent | MSE: 0.020341412005887995
+Model saved at /Users/luisjorge/code/Flatiron-Phase-5/MarketAI/server/ml_components/RF_multi_output/models/rf_tech_recent.joblib

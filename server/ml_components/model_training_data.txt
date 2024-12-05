@@ -1,0 +1,3 @@
+Ticker,Model,MSE,MAE,Notes
+AXP,Random Forest,N/A,N/A,Successfully trained.
+AXP,Random Forest,N/A,N/A,Successfully trained.
