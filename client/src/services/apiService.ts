@@ -47,19 +47,25 @@ export const fetchSectors = async () => {
     return await response.json();
 };
 
-export const fetchAnalysisPrediction = async (symbol: string) => {
+export const fetchAnalysisPrediction = async (
+    stock_name: string,
+    days_out: number,
+    noise_level: number
+  ) => {
     const response = await fetch(`http://127.0.0.1:10000/analysis/predict`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ symbol }),
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ stock_name, days_out, noise_level }),
     });
+  
     if (!response.ok) {
-        throw new Error(`Failed to fetch prediction for symbol: ${symbol}`);
+      throw new Error(`Failed to fetch prediction for stock: ${stock_name}`);
     }
     return await response.json();
-};
+  };
+  
 
 export const fetchHistoricalData = async (sector: string, timeframe: string) => {
     const response = await fetch(`http://127.0.0.1:10000/data/historical/${sector}/${timeframe}`);

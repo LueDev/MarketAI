@@ -30,11 +30,11 @@ api.add_resource(AnalysisPredictResource, '/analysis/predict')
 
 # Data resources
 api.add_resource(StockDataFetchResource, '/stocks/fetch/<string:symbol>')
-api.add_resource(DataFetchResource, '/data/historical/<string:sector>/<string:timeframe>')  # Adjusted this mapping
+api.add_resource(DataFetchResource, '/data/historical/<string:sector>/<string:timeframe>')
 
 if __name__ == '__main__':
     with app.app_context():
-        db.create_all()  # This will directly create tables based on your models
+        db.create_all() 
         print("Tables created successfully!")
         app.run(host='localhost', port=10000, debug=True)
 

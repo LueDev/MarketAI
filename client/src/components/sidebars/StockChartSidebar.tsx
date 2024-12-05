@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { useAppContext } from "../../context/AppContext";
+import { fetchAnalysisPrediction } from "../../services/apiService";
 
 const subplotMapping: Record<string, string[]> = {
   "Show All": [
@@ -23,7 +25,20 @@ const subplotMapping: Record<string, string[]> = {
     "volatility",
     "volume",
   ],
-  "Price Indicators": ["candlestick", "vwap", "ma10", "ma50", "ema10", "ema50", "bollingerUpper", "bollingerMiddle", "bollingerLower", "pivot", "support1", "resistance1"],
+  "Price Indicators": [
+    "candlestick",
+    "vwap",
+    "ma10",
+    "ma50",
+    "ema10",
+    "ema50",
+    "bollingerUpper",
+    "bollingerMiddle",
+    "bollingerLower",
+    "pivot",
+    "support1",
+    "resistance1",
+  ],
   "Momentum (MACD)": ["MACD", "MACDSignal"],
   Oscillators: ["RSI", "stochastic", "Williams_R"],
   "Volume/Volatility": ["volume", "volatility"],
@@ -33,7 +48,34 @@ const StockChartSidebar: React.FC = () => {
   const { enabledIndicators, setEnabledIndicators, visibleSubplots, setVisibleSubplots } =
     useAppContext();
 
-  const [noiseLevel, setNoiseLevel] = useState(0.000000000000000016)
+  const location = useLocation();
+
+  // Extract symbol from URL
+  const symbol = location.pathname.split("/").pop();
+
+  console.log("Extracted symbol (location.pathname):", symbol);
+
+  const [noiseLevel, setNoiseLevel] = useState(0.016);
+  const [timeframe, setTimeframe] = useState(90);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleGeneratePredictions = async () => {
+    if (!symbol) {
+      alert("Stock symbol is missing!");
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      const predictions = await fetchAnalysisPrediction(symbol, timeframe, noiseLevel);
+      console.log("Predictions:", predictions); // Replace with logic to handle/display predictions
+    } catch (error) {
+      console.error("Error generating predictions:", error);
+      alert("Failed to generate predictions. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleToggleIndicator = (indicator: string) => {
     setEnabledIndicators((prevState) => ({
@@ -46,7 +88,6 @@ const StockChartSidebar: React.FC = () => {
     const value = event.target.value;
     setVisibleSubplots(value);
 
-    // Automatically toggle relevant indicators in the sidebar
     const relatedIndicators = subplotMapping[value] || [];
     setEnabledIndicators((prevState) => {
       const updatedState = { ...prevState };
@@ -62,31 +103,39 @@ const StockChartSidebar: React.FC = () => {
       <h2 className="text-lg font-bold mb-4">Prediction Insights</h2>
       <div className="mb-6">
         <label className="block mb-2">Timeframe:</label>
-        <select className="w-full p-2 bg-gray-800 text-white rounded">
-          <option>1 Day</option>
-          <option>5 Days</option>
-          <option>15 Days</option>
-          <option>30 Days</option>
-          <option>45 Days</option>
-          <option>60 Days</option>
-          <option>90 Days</option>
-          <option>180 Days</option>
+        <select
+          value={timeframe}
+          onChange={(e) => setTimeframe(Number(e.target.value))}
+          className="w-full p-2 bg-gray-800 text-white rounded"
+        >
+          <option value={1}>1 Day</option>
+          <option value={5}>5 Days</option>
+          <option value={15}>15 Days</option>
+          <option value={30}>30 Days</option>
+          <option value={45}>45 Days</option>
+          <option value={60}>60 Days</option>
+          <option value={90}>90 Days</option>
+          <option value={180}>180 Days</option>
         </select>
       </div>
       <div className="mb-6">
         <label className="block mb-2">Noise Level:</label>
         <input
-            type="number"
-            min="0"
-            max="1"
-            step="0.01"
-            value={noiseLevel}
-            onChange={(e) => setNoiseLevel(parseFloat(e.target.value))}
-            className="w-full p-2 bg-gray-800 text-white rounded"
+          type="number"
+          min="0"
+          max="1"
+          step="0.01"
+          value={noiseLevel}
+          onChange={(e) => setNoiseLevel(parseFloat(e.target.value))}
+          className="w-full p-2 bg-gray-800 text-white rounded"
         />
       </div>
-      <button className="w-full bg-blue-500 p-2 rounded text-white mb-6">
-        Generate Predictions
+      <button
+        onClick={handleGeneratePredictions}
+        className={`w-full p-2 rounded text-white mb-6 ${isLoading ? "bg-gray-500" : "bg-blue-500"}`}
+        disabled={isLoading}
+      >
+        {isLoading ? "Loading..." : "Generate Predictions"}
       </button>
 
       <h2 className="text-lg font-bold mb-4">Chart Customization</h2>

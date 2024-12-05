@@ -15,6 +15,20 @@ import redis
 # Load environment variables
 load_dotenv()
 
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+
+# Directory for instance-specific files
+INSTANCE_DIR = os.path.join(BASE_DIR, "instance")
+
+# Ensure the instance directory exists
+os.makedirs(INSTANCE_DIR, exist_ok=True)
+
+# Update database paths to use the instance directory
+DEV_DATABASE_URI = f"sqlite:///{os.path.join(INSTANCE_DIR, 'market_ai_dev.db')}"
+TEST_DATABASE_URI = f"sqlite:///{os.path.join(INSTANCE_DIR, 'market_ai_test.db')}"
+DATABASE_URI = f"sqlite:///{os.path.join(INSTANCE_DIR, 'market_ai.db')}"
+
+
 # Base configuration class
 class Config:
     SECRET_KEY = os.getenv('SECRET_KEY', 'mysecretkey')
@@ -53,18 +67,18 @@ class Config:
 # Development configuration
 class DevelopmentConfig(Config):
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = os.getenv('DEV_DATABASE_URI', 'sqlite:///market_ai_dev.db')
+    SQLALCHEMY_DATABASE_URI = DEV_DATABASE_URI
 
 # Testing configuration
 class TestingConfig(Config):
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = os.getenv('TEST_DATABASE_URI', 'sqlite:///market_ai_test.db')
+    SQLALCHEMY_DATABASE_URI = TEST_DATABASE_URI
     SECRET_KEY = 'test_secret_key'
 
 # Production configuration
 class ProductionConfig(Config):
     DEBUG = False
-    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URI', 'sqlite:///market_ai.db')
+    SQLALCHEMY_DATABASE_URI = DATABASE_URI
     REDIS_HOST = os.getenv('PROD_REDIS_HOST', 'redis-prod.example.com')  # Override host for production
 
 # Configuration mapping

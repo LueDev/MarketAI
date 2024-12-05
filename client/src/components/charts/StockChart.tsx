@@ -25,8 +25,8 @@ const StockChart: React.FC<StockChartProps> = ({ symbol, data }) => {
     useEffect(() => {
       const handleResize = () => {
         setChartDimensions({
-          width: window.innerWidth * 0.6, // 3/5 of the screen width
-          height: window.innerHeight * 0.5, // Half of the screen height
+          width: window.innerWidth * 0.9, // 3/5 of the screen width
+          height: window.innerHeight * 0.9, // Half of the screen height
         });
       };
   
