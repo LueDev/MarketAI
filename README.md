@@ -1,3 +1,7 @@
+
+![Screenshot 2024-12-06 at 4 18 44 PM](https://github.com/user-attachments/assets/00d0c3b9-cf8f-4b82-8755-2cc15cd8a02a)
+
+
 # 📈 MarketAI: Your Stock Market Prediction Assistant
 
 MarketAI is a cutting-edge stock market prediction platform that empowers users with actionable insights, predictive analytics, and personalized alerts. Built with Flask, SQLAlchemy, and Redis, it integrates machine learning models to forecast stock prices and technical indicators for informed decision-making.
